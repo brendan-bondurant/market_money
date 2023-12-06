@@ -9,6 +9,7 @@ RSpec.describe "Market Money API" do
       expect(response).to be_successful
 
       vendor = JSON.parse(response.body, symbolize_names: true)[:data]
+      
       expect(vendor).to have_key(:id)
       expect(vendor[:id]).to be_an(String)
 

@@ -7,5 +7,9 @@ describe "Market Money API" do
     get '/api/v0/markets'
 
     expect(response).to be_successful
+    expect(markets.county).to eq(3)
+
+    markets = JSON.parse(response.body)
+    require 'pry'; binding.pry
   end
 end

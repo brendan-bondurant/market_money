@@ -137,4 +137,5 @@ describe "Market Money API" do
     expect(data[:errors].first[:status]).to eq("404")
     expect(data[:errors].first[:detail]).to eq("Couldn't find Market with 'id'=123412433124")
   end
+
 end

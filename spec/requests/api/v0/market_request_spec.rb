@@ -5,11 +5,11 @@ describe "Market Money API" do
     create_list(:market, 3)
 
     get '/api/v0/markets'
+    markets = JSON.parse(response.body)
 
     expect(response).to be_successful
-    expect(markets.county).to eq(3)
+    expect(markets.count).to eq(3)
 
-    markets = JSON.parse(response.body)
     require 'pry'; binding.pry
   end
 end

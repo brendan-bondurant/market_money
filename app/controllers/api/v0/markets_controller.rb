@@ -1,5 +1,5 @@
 class Api::V0::MarketsController < ApplicationController
-  # rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found_response
 
   def index
     render json: MarketSerializer.new(Market.all)
@@ -8,15 +8,6 @@ class Api::V0::MarketsController < ApplicationController
   def show
       market = Market.find(params[:id])
       render json: MarketSerializer.new(market)
-    rescue ActiveRecord::RecordNotFound => exception
-      render json: {
-        errors: [
-          {
-            status: "404",
-            detail: exception.message
-          }
-        ]
-      }, status: :not_found
     end
   end
 

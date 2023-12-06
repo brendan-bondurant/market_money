@@ -97,42 +97,29 @@ describe "Market Money API" do
   end
   it 'shows vendors for a market' do
     new_market = create(:market)
-
+    new_market.vendors << create_list(:vendor, 2)
     get "/api/v0/markets/#{new_market.id}/vendors"
 
     expect(response).to be_successful
+    expect(new_market.vendors.count).to eq(2)
 
-    # expect(market).to have_key(:id)
-    # expect(market[:id]).to be_an(String)
+    # new_market.vendors. each do |vendor|
+    #   expect(vendor).to have_key(:id)
+    #   expect(vendor[:id]).to be_an(String)
+    #   expect(vendor[:attributes]).to have_key(:name)
+    #   expect(vendor[:attributes][:name]).to be_a(String)
 
-    # expect(market).to have_key(:id)
-    # expect(market[:id]).to be_an(String)
+    #   expect(vendor[:attributes]).to have_key(:description)
+    #   expect(vendor[:attributes][:description]).to be_a(String)
 
-    # expect(market[:attributes]).to have_key(:name)
-    # expect(market[:attributes][:name]).to be_a(String)
+    #   expect(vendor[:attributes]).to have_key(:contact_name)
+    #   expect(vendor[:attributes][:contact_name]).to be_a(String)
 
-    # expect(market[:attributes]).to have_key(:street)
-    # expect(market[:attributes][:street]).to be_a(String)
+    #   expect(vendor[:attributes]).to have_key(:contact_phone)
+    #   expect(vendor[:attributes][:contact_phone]).to be_a(String)
 
-    # expect(market[:attributes]).to have_key(:city)
-    # expect(market[:attributes][:city]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:county)
-    # expect(market[:attributes][:county]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:state)
-    # expect(market[:attributes][:state]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:zip)
-    # expect(market[:attributes][:zip]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:lat)
-    # expect(market[:attributes][:lat]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:lon)
-    # expect(market[:attributes][:lon]).to be_a(String)
-
-    # expect(market[:attributes]).to have_key(:vendor_count)
-    # expect(market[:attributes][:vendor_count]).to be_a(Integer)
-end
+    #   expect(vendor[:attributes]).to have_key(:credit_accepted)
+    #   expect(vendor[:attributes][:credit_accepted]).to be_a(Boolean)
+    # end
+  end
 end

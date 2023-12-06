@@ -51,17 +51,15 @@ RSpec.describe "Market Money API" do
                         credit_accepted: true
                       })
       headers = {"CONTENT_TYPE" => "application/json"}  
-      POST "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
       new_vendor = Vendor.last
 
       expect(response).to be_successful
-      expect(new_vendor.name).to eq(book_params[:name])
-      expect(new_vendor.description).to eq(book_params[:description])
-      expect(new_vendor.contact_name).to eq(book_params[:contact_name])
-      expect(new_vendor.contact_phone).to eq(book_params[:contact_phone])
-      expect(new_vendor.credit_accepted).to eq(book_params[:credit_accepted])
-
-    
+      expect(new_vendor.name).to eq(vendor_params[:name])
+      expect(new_vendor.description).to eq(vendor_params[:description])
+      expect(new_vendor.contact_name).to eq(vendor_params[:contact_name])
+      expect(new_vendor.contact_phone).to eq(vendor_params[:contact_phone])
+      expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
     end
   
   end

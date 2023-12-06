@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe "Market Money API" do
   it "sends a list of markets" do
-    create_list(:markets, 3)
+    create_list(:market, 3)
 
     get '/api/v1/markets'
 

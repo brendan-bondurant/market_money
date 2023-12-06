@@ -12,11 +12,11 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def create
-    missing_params = required_params - vendor_params.keys
-    if missing_params.empty?
-      new_vendor = Vendor.create(vendor_params)
+    new_vendor = Vendor.create(vendor_params)
+    if new_vendor.valid?
       render json: VendorSerializer.new(new_vendor), status: :created
     else
+      missing_params = required_params - vendor_params.keys
       render json: { error: "Validation failed: #{missing_params.join(', ')} can't be blank" }, status: 400
     end
   end

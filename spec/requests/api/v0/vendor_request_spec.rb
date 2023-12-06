@@ -75,7 +75,7 @@ RSpec.describe "Market Money API" do
       new_vendor = Vendor.last
           
       expect(response).to have_http_status(400)
-                      require 'pry'; binding.pry
+
     end
   
   end

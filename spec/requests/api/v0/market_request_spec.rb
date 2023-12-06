@@ -120,12 +120,13 @@ describe "Market Money API" do
       expect(vendor[:attributes][:contact_phone]).to be_a(String)
 
       expect(vendor[:attributes]).to have_key(:credit_accepted)
-      # expect(vendor[:attributes][:credit_accepted]).to be_a(Boolean) How to test?
+      expect(vendor[:attributes][:credit_accepted]).to be(true).or be(false)
+
     end
   end
   it 'shows an error if invalid id' do
 
-    get "/api/v0/markets/123412433124"
+    get "/api/v0/markets/123412433124/vendors"
     # market = JSON.parse(response.body, symbolize_names: true)[:data]
     expect(response).to_not be_successful
     expect(response.status).to eq(404)

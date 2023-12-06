@@ -93,6 +93,46 @@ describe "Market Money API" do
     
     expect(data[:errors]).to be_a(Array)
     expect(data[:errors].first[:status]).to eq("404")
-    expect(data[:errors].first[:title]).to eq("Couldn't find Market with 'id'=123412433124")
+    expect(data[:errors].first[:detail]).to eq("Couldn't find Market with 'id'=123412433124")
   end
+  it 'shows vendors for a market' do
+    new_market = create(:market)
+
+    get "/api/v0/markets/#{new_market.id}/vendors"
+
+    expect(response).to be_successful
+
+    # expect(market).to have_key(:id)
+    # expect(market[:id]).to be_an(String)
+
+    # expect(market).to have_key(:id)
+    # expect(market[:id]).to be_an(String)
+
+    # expect(market[:attributes]).to have_key(:name)
+    # expect(market[:attributes][:name]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:street)
+    # expect(market[:attributes][:street]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:city)
+    # expect(market[:attributes][:city]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:county)
+    # expect(market[:attributes][:county]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:state)
+    # expect(market[:attributes][:state]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:zip)
+    # expect(market[:attributes][:zip]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:lat)
+    # expect(market[:attributes][:lat]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:lon)
+    # expect(market[:attributes][:lon]).to be_a(String)
+
+    # expect(market[:attributes]).to have_key(:vendor_count)
+    # expect(market[:attributes][:vendor_count]).to be_a(Integer)
+end
 end

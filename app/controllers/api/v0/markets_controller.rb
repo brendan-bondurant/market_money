@@ -6,7 +6,6 @@ class Api::V0::MarketsController < ApplicationController
   end
 
   def show
-    require 'pry'; binding.pry
       market = Market.find(params[:id])
       render json: MarketSerializer.new(market)
     rescue ActiveRecord::RecordNotFound => exception
@@ -14,7 +13,7 @@ class Api::V0::MarketsController < ApplicationController
         errors: [
           {
             status: "404",
-            title: exception.message
+            detail: exception.message
           }
         ]
       }, status: :not_found

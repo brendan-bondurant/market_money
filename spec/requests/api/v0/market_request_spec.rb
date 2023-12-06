@@ -98,10 +98,12 @@ describe "Market Money API" do
   it 'shows vendors for a market' do
     new_market = create(:market)
     new_market.vendors << create_list(:vendor, 2)
+    
     get "/api/v0/markets/#{new_market.id}/vendors"
 
     expect(response).to be_successful
     expect(new_market.vendors.count).to eq(2)
+    
     vendors = JSON.parse(response.body, symbolize_names: true)[:data]
     vendors.each do |vendor|
       expect(vendor).to have_key(:id)

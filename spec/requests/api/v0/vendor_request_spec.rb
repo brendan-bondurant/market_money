@@ -55,11 +55,27 @@ RSpec.describe "Market Money API" do
       new_vendor = Vendor.last
 
       expect(response).to be_successful
+      expect(response).to have_http_status(201)
       expect(new_vendor.name).to eq(vendor_params[:name])
       expect(new_vendor.description).to eq(vendor_params[:description])
       expect(new_vendor.contact_name).to eq(vendor_params[:contact_name])
       expect(new_vendor.contact_phone).to eq(vendor_params[:contact_phone])
       expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
+    end
+    it 'gives an error if information is missing' do
+      vendor_params = ({
+                        name: 'Test Vendor',
+                        description: 'We sell things',
+                        contact_name: 'Brendan',
+                        # contact_phone: '123-4567',
+                        credit_accepted: true
+                      })
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      new_vendor = Vendor.last
+          
+      expect(response).to have_http_status(400)
+                      require 'pry'; binding.pry
     end
   
   end

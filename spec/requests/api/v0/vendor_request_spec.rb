@@ -73,9 +73,24 @@ RSpec.describe "Market Money API" do
       headers = {"CONTENT_TYPE" => "application/json"}  
       post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
       new_vendor = Vendor.last
-          
+      data = JSON.parse(response.body, symbolize_names: true)
       expect(response).to have_http_status(400)
-
+      expect(data[:errors].first[:detail]).to eq("Contact phone can't be blank")
+    end
+    it 'gives an error if more information is missing' do
+      vendor_params = ({
+                        name: 'Test Vendor',
+                        description: 'We sell things',
+                        # contact_name: 'Brendan',
+                        # contact_phone: '123-4567',
+                        credit_accepted: true
+                      })
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      new_vendor = Vendor.last
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to have_http_status(400)
+      expect(data[:errors].first[:detail]).to eq("Contact name can't be blank, Contact phone can't be blank")
     end
   
   end

@@ -12,12 +12,12 @@ class Api::V0::VendorsController < ApplicationController
   end
 
   def create
-    new_vendor = Vendor.create(vendor_params)
-    if new_vendor.valid?
+    new_vendor = Vendor.new(vendor_params)
+    if new_vendor.save
       render json: VendorSerializer.new(new_vendor), status: :created
     else
-      missing_params = required_params - vendor_params.keys
-      render json: { error: "Validation failed: #{missing_params.join(', ')} can't be blank" }, status: 400
+      render json: ErrorSerializer.new(ErrorMessage.new(new_vendor.errors.full_messages.join(", "), 400))
+        .serialize_json, status: :bad_request
     end
   end
 
@@ -34,16 +34,16 @@ class Api::V0::VendorsController < ApplicationController
       .serialize_json, status: :not_found
   end
 
-  def bad_request_response(exception)
-    render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 400))
-    .serialize_json, status: :not_found
-  end
+  # def bad_request_response(exception)
+  #   render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 400))
+  #   .serialize_json, status: :not_found
+  # end
 
+  # def required_params
+  #   ["name", "description", "contact_name", "contact_phone", "credit_accepted"]
+  # end
   def vendor_params
     params.require(:vendor).permit(:name, :description, :contact_name, :contact_phone, :credit_accepted)
   end
 
-  def required_params
-    ["name", "description", "contact_name", "contact_phone", "credit_accepted"]
-  end
 end

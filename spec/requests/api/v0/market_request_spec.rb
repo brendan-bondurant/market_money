@@ -8,8 +8,8 @@ describe "Market Money API" do
     markets = JSON.parse(response.body)
 
     expect(response).to be_successful
+    require 'pry'; binding.pry
     expect(markets.count).to eq(3)
 
-    require 'pry'; binding.pry
   end
 end

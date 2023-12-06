@@ -47,35 +47,39 @@ describe "Market Money API" do
 
     get "/api/v0/markets/#{id}"
     market = JSON.parse(response.body, symbolize_names: true)[:data]
+
     expect(market).to have_key(:id)
     expect(market[:id]).to be_an(String)
 
-    expect(market).to have_key(:name)
-    expect(market[:name]).to be_a(String)
+    expect(market).to have_key(:id)
+    expect(market[:id]).to be_an(String)
 
-    expect(market).to have_key(:street)
-    expect(market[:street]).to be_a(String)
+    expect(market[:attributes]).to have_key(:name)
+    expect(market[:attributes][:name]).to be_a(String)
 
-    expect(market).to have_key(:city)
-    expect(market[:city]).to be_a(String)
+    expect(market[:attributes]).to have_key(:street)
+    expect(market[:attributes][:street]).to be_a(String)
 
-    expect(market).to have_key(:county)
-    expect(market[:county]).to be_a(String)
+    expect(market[:attributes]).to have_key(:city)
+    expect(market[:attributes][:city]).to be_a(String)
 
-    expect(market).to have_key(:state)
-    expect(market[:state]).to be_a(String)
+    expect(market[:attributes]).to have_key(:county)
+    expect(market[:attributes][:county]).to be_a(String)
 
-    expect(market).to have_key(:zip)
-    expect(market[:zip]).to be_a(String)
+    expect(market[:attributes]).to have_key(:state)
+    expect(market[:attributes][:state]).to be_a(String)
 
-    expect(market).to have_key(:lat)
-    expect(market[:lat]).to be_a(String)
+    expect(market[:attributes]).to have_key(:zip)
+    expect(market[:attributes][:zip]).to be_a(String)
 
-    expect(market).to have_key(:lon)
-    expect(market[:lon]).to be_a(String)
+    expect(market[:attributes]).to have_key(:lat)
+    expect(market[:attributes][:lat]).to be_a(String)
 
-    expect(market).to have_key(:vendor_count)
-    expect(market[:vendor_count]).to be_a(Integer)
+    expect(market[:attributes]).to have_key(:lon)
+    expect(market[:attributes][:lon]).to be_a(String)
+
+    expect(market[:attributes]).to have_key(:vendor_count)
+    expect(market[:attributes][:vendor_count]).to be_a(Integer)
     
   end
   it 'shows an error if invalid id' do

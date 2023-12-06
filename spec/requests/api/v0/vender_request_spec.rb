@@ -41,4 +41,28 @@ RSpec.describe "Market Money API" do
       expect(data[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123412433124")
     end
   end
+  describe '#create' do
+    it 'can create a vendor' do
+      vendor_params = ({
+                        name: 'Test Vendor',
+                        description: 'We sell things',
+                        contact_name: 'Brendan',
+                        contact_phone: '123-4567',
+                        credit_accepted: true
+                      })
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      POST "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      new_vendor = Vendor.last
+
+      expect(response).to be_successful
+      expect(new_vendor.name).to eq(book_params[:name])
+      expect(new_vendor.description).to eq(book_params[:description])
+      expect(new_vendor.contact_name).to eq(book_params[:contact_name])
+      expect(new_vendor.contact_phone).to eq(book_params[:contact_phone])
+      expect(new_vendor.credit_accepted).to eq(book_params[:credit_accepted])
+
+    
+    end
+  
+  end
 end

@@ -116,6 +116,26 @@ RSpec.describe "Market Money API" do
     expect(vendor.name).to_not eq(previous_name)
     expect(vendor.name).to eq(vendor_params[:name])
   end
+  it 'cannot update with invalid id' do
+    vendor_update = create(:vendor)
+    id = vendor_update.id = 123456789
+    previous_name = vendor_update[:name]
+    vendor_params = {
+      id: 321,
+      name: "New Name",
+      description: "synergy",
+      contact_name: "Roberto Menescal",
+      contact_phone: "376-037-5055 x821",
+      credit_accepted: true
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}  
+    patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
+    vendor = Vendor.find_by(id: id)
+
+    expect(response.status).to eq(404)
+    expect(data[:errors].first[:status]).to eq("404")
+    expect(data[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123456789")
+  end
   
   
   end

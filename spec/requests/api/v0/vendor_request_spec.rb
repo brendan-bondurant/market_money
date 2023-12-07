@@ -92,6 +92,31 @@ RSpec.describe "Market Money API" do
       expect(response).to have_http_status(400)
       expect(data[:errors].first[:detail]).to eq("Contact name can't be blank, Contact phone can't be blank")
     end
+  end
+  describe '#update' do
+  it 'can update the name' do
+    vendor_update = create(:vendor)
+    id = vendor_update.id
+    previous_name = vendor_update[:name]
+    vendor_params = {
+      id: 321,
+      name: "New Name",
+      description: "synergy",
+      contact_name: "Roberto Menescal",
+      contact_phone: "376-037-5055 x821",
+      credit_accepted: true
+    }
+
+    headers = {"CONTENT_TYPE" => "application/json"}  
+    patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
+    vendor = Vendor.find_by(id: id)
+
+    expect(response).to be_successful
+    expect(response.status).to eq(200)
+    expect(vendor.name).to_not eq(previous_name)
+    expect(vendor.name).to eq(vendor_params[:name])
+  end
+  
   
   end
 end

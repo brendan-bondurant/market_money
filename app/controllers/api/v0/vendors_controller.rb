@@ -3,7 +3,7 @@ class Api::V0::VendorsController < ApplicationController
 
   def index
     market = Market.find(params[:market_id])
-    render json: VendorSerializer.new(Vendor.all)
+    render json: VendorSerializer.new(market.vendors.all)
   end
 
   def show
@@ -19,6 +19,12 @@ class Api::V0::VendorsController < ApplicationController
       render json: ErrorSerializer.new(ErrorMessage.new(new_vendor.errors.full_messages.join(", "), 400))
         .serialize_json, status: :bad_request
     end
+  end
+
+  def update
+    vendor = Vendor.find(params[:id])
+    vendor.update(vendor_params)
+    render json: VendorSerializer.new(vendor)
   end
 
   # def create

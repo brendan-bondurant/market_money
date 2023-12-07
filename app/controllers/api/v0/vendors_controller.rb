@@ -23,14 +23,14 @@ class Api::V0::VendorsController < ApplicationController
 
   def update
     vendor = Vendor.find(params[:id])
-    if vendor.update(vendor_params)
-      render json: VendorSerializer.new(vendor)
-    else
-      render json: ErrorSerializer.new(ErrorMessage.new(vendor.errors.full_messages.join(", "), 400))
-        .serialize_json, status: :bad_request
-    end
+    vendor.update(vendor_params)
+    render json: VendorSerializer.new(vendor)
   end
 
+  def destroy
+    vendor = Vendor.find(params[:id])
+    vendor.destroy
+  end
   # def create
   #   require 'pry'; binding.pry
   #   new_vendor = Vendor.create(vendor_params)

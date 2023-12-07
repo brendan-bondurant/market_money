@@ -92,66 +92,75 @@ RSpec.describe "Market Money API" do
     end
   end
   describe '#update' do
-  it 'can update the name' do
-    vendor_update = create(:vendor)
-    id = vendor_update.id
-    previous_name = vendor_update[:name]
-    vendor_params = {
-      id: 321,
-      name: "New Name",
-      description: "synergy",
-      contact_name: "Roberto Menescal",
-      contact_phone: "376-037-5055 x821",
-      credit_accepted: true
-    }
-    
-    headers = {"CONTENT_TYPE" => "application/json"}  
-    patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
-    updated_vendor = JSON.parse(response.body, symbolize_names: true)[:data]
-    expect(response).to be_successful
-    expect(response.status).to eq(200)
-    expect(updated_vendor[:attributes][:name]).to_not eq(previous_name)
-    expect(updated_vendor[:attributes][:name]).to eq(vendor_params[:name])
-  end
-  it 'cannot update with invalid id' do
-    vendor_update = create(:vendor)
-    id = vendor_update.id = 123456789
-    previous_name = vendor_update[:name]
-    vendor_params = {
-      id: 321,
-      name: "New Name",
-      description: "synergy",
-      contact_name: "Roberto Menescal",
-      contact_phone: "376-037-5055 x821",
-      credit_accepted: true
-    }
-    headers = {"CONTENT_TYPE" => "application/json"}  
-    patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
-    data = JSON.parse(response.body, symbolize_names: true)
-    
-    expect(response.status).to eq(404)
-    expect(data[:errors].first[:status]).to eq("404")
-    expect(data[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123456789")
-  end
+    it 'can update the name' do
+      vendor_update = create(:vendor)
+      id = vendor_update.id
+      previous_name = vendor_update[:name]
+      vendor_params = {
+        id: 321,
+        name: "New Name",
+        description: "synergy",
+        contact_name: "Roberto Menescal",
+        contact_phone: "376-037-5055 x821",
+        credit_accepted: true
+      }
+
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
+      updated_vendor = JSON.parse(response.body, symbolize_names: true)[:data]
+      expect(response).to be_successful
+      expect(response.status).to eq(200)
+      expect(updated_vendor[:attributes][:name]).to_not eq(previous_name)
+      expect(updated_vendor[:attributes][:name]).to eq(vendor_params[:name])
+    end
+    it 'cannot update with invalid id' do
+      vendor_update = create(:vendor)
+      id = vendor_update.id = 123456789
+      previous_name = vendor_update[:name]
+      vendor_params = {
+        id: 321,
+        name: "New Name",
+        description: "synergy",
+        contact_name: "Roberto Menescal",
+        contact_phone: "376-037-5055 x821",
+        credit_accepted: true
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
+      data = JSON.parse(response.body, symbolize_names: true)
+
+      expect(response.status).to eq(404)
+      expect(data[:errors].first[:status]).to eq("404")
+      expect(data[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123456789")
+    end
   
-  it 'gives an error if information is missing' do
-    vendor_update = create(:vendor)
-    previous_name = vendor_update[:name]
-    vendor_params = {
-      id: 321,
-      name: nil,
-      description: "synergy",
-      contact_name: "Roberto Menescal",
-      contact_phone: "376-037-5055 x821",
-      credit_accepted: true
-    }
-    headers = {"CONTENT_TYPE" => "application/json"}  
-    post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
-    new_vendor = Vendor.last
-    data = JSON.parse(response.body, symbolize_names: true)
-    expect(response).to have_http_status(400)
-    expect(data[:errors].first[:detail]).to eq("Name can't be blank")
+    it 'gives an error if information is missing' do
+      vendor_update = create(:vendor)
+      previous_name = vendor_update[:name]
+      vendor_params = {
+        id: 321,
+        name: nil,
+        description: "synergy",
+        contact_name: "Roberto Menescal",
+        contact_phone: "376-037-5055 x821",
+        credit_accepted: true
+      }
+      headers = {"CONTENT_TYPE" => "application/json"}  
+      post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+      new_vendor = Vendor.last
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to have_http_status(400)
+      expect(data[:errors].first[:detail]).to eq("Name can't be blank")
+    end
   end
+  describe '#delete' do
+    it 'can remove a vendor' do
+      vendor_to_delete = create(:vendor)
+      id = vendor_to_delete.id
+      delete "/api/v0/vendors/#{id}"
+      expect(response).to have_http_status(204)
+    
+    end
   
-end
+  end
 end

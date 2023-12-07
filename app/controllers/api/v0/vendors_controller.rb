@@ -27,6 +27,10 @@ class Api::V0::VendorsController < ApplicationController
     render json: VendorSerializer.new(vendor)
   end
 
+  def destroy
+    vendor = Vendor.find(params[:id])
+    vendor.destroy
+  end
   # def create
   #   require 'pry'; binding.pry
   #   new_vendor = Vendor.create(vendor_params)

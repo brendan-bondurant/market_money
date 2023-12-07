@@ -52,15 +52,14 @@ RSpec.describe "Market Money API" do
                       })
       headers = {"CONTENT_TYPE" => "application/json"}  
       post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
-      new_vendor = Vendor.last
-
+      new_vendor = JSON.parse(response.body, symbolize_names: true)[:data]
       expect(response).to be_successful
       expect(response).to have_http_status(201)
-      expect(new_vendor.name).to eq(vendor_params[:name])
-      expect(new_vendor.description).to eq(vendor_params[:description])
-      expect(new_vendor.contact_name).to eq(vendor_params[:contact_name])
-      expect(new_vendor.contact_phone).to eq(vendor_params[:contact_phone])
-      expect(new_vendor.credit_accepted).to eq(vendor_params[:credit_accepted])
+      expect(new_vendor[:attributes][:name]).to eq(vendor_params[:name])
+      expect(new_vendor[:attributes][:description]).to eq(vendor_params[:description])
+      expect(new_vendor[:attributes][:contact_name]).to eq(vendor_params[:contact_name])
+      expect(new_vendor[:attributes][:contact_phone]).to eq(vendor_params[:contact_phone])
+      expect(new_vendor[:attributes][:credit_accepted]).to eq(vendor_params[:credit_accepted])
     end
     it 'gives an error if information is missing' do
       vendor_params = ({
@@ -72,19 +71,18 @@ RSpec.describe "Market Money API" do
                       })
       headers = {"CONTENT_TYPE" => "application/json"}  
       post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
-      new_vendor = Vendor.last
       data = JSON.parse(response.body, symbolize_names: true)
       expect(response).to have_http_status(400)
       expect(data[:errors].first[:detail]).to eq("Contact phone can't be blank")
     end
     it 'gives an error if more information is missing' do
       vendor_params = ({
-                        name: 'Test Vendor',
-                        description: 'We sell things',
-                        # contact_name: 'Brendan',
-                        # contact_phone: '123-4567',
-                        credit_accepted: true
-                      })
+        name: 'Test Vendor',
+        description: 'We sell things',
+        # contact_name: 'Brendan',
+        # contact_phone: '123-4567',
+        credit_accepted: true
+      })
       headers = {"CONTENT_TYPE" => "application/json"}  
       post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
       new_vendor = Vendor.last
@@ -106,15 +104,14 @@ RSpec.describe "Market Money API" do
       contact_phone: "376-037-5055 x821",
       credit_accepted: true
     }
-
+    
     headers = {"CONTENT_TYPE" => "application/json"}  
     patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
-    vendor = Vendor.find_by(id: id)
-
+    updated_vendor = JSON.parse(response.body, symbolize_names: true)[:data]
     expect(response).to be_successful
     expect(response.status).to eq(200)
-    expect(vendor.name).to_not eq(previous_name)
-    expect(vendor.name).to eq(vendor_params[:name])
+    expect(updated_vendor[:attributes][:name]).to_not eq(previous_name)
+    expect(updated_vendor[:attributes][:name]).to eq(vendor_params[:name])
   end
   it 'cannot update with invalid id' do
     vendor_update = create(:vendor)
@@ -130,13 +127,31 @@ RSpec.describe "Market Money API" do
     }
     headers = {"CONTENT_TYPE" => "application/json"}  
     patch "/api/v0/vendors/#{id}", headers: headers, params: JSON.generate(vendor: vendor_params)
-    vendor = Vendor.find_by(id: id)
-
+    data = JSON.parse(response.body, symbolize_names: true)
+    
     expect(response.status).to eq(404)
     expect(data[:errors].first[:status]).to eq("404")
     expect(data[:errors].first[:detail]).to eq("Couldn't find Vendor with 'id'=123456789")
   end
   
-  
+  it 'gives an error if information is missing' do
+    vendor_update = create(:vendor)
+    previous_name = vendor_update[:name]
+    vendor_params = {
+      id: 321,
+      name: nil,
+      description: "synergy",
+      contact_name: "Roberto Menescal",
+      contact_phone: "376-037-5055 x821",
+      credit_accepted: true
+    }
+    headers = {"CONTENT_TYPE" => "application/json"}  
+    post "/api/v0/vendors", headers: headers, params: JSON.generate(vendor: vendor_params)
+    new_vendor = Vendor.last
+    data = JSON.parse(response.body, symbolize_names: true)
+    expect(response).to have_http_status(400)
+    expect(data[:errors].first[:detail]).to eq("Name can't be blank")
   end
+  
+end
 end

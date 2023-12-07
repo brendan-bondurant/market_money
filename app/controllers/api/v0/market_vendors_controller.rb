@@ -1,6 +1,25 @@
 class Api::V0::MarketVendorsController < ApplicationController
   
+  def destroy
+    market_id = params[:market_vendor][:market_id]
+    vendor_id = params[:market_vendor][:vendor_id]
+    # require 'pry'; binding.pry
+    mv = MarketVendor.find_by(market_id: market_id, vendor_id: vendor_id)
+    if mv.is_a?(MarketVendor)
+      mv.destroy
+    else
+      render json: {
+        "errors": [
+          {
+            status: "404",
+            detail: "No MarketVendor with market_id=#{market_id} AND a vendor_id=#{vendor_id}"
+          }
+        ]
+      }, status: :not_found
+  end
+
   def create
+    require 'pry'; binding.pry
     market_id = params[:market_id]
     vendor_id = params[:vendor_id]
     market = Market.find(market_id)
@@ -20,6 +39,23 @@ class Api::V0::MarketVendorsController < ApplicationController
   def market_vendor_params
     params.require(:market_vendor).permit(:market_id, :vendor_id)
   end
+
+  # def not_mv
+  #   market_id = params[:market_vendor][:market_id]
+  #   vendor_id = params[:market_vendor][:vendor_id]
+  #   render json: {
+  #     "errors": [
+  #       {
+  #         "detail": "No MarketVendor with market_id=#{market_id} AND a vendor_id=#{vendor_id}"
+  #       }
+  #     ]
+  #   }, status: :not_found
+  # end
+
+  def not_found_response(exception)
+    render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
+      .serialize_json, status: :not_found
+  end
   
   def not_valid_response(exception)
     if exception.message.include?("Market")
@@ -30,7 +66,7 @@ class Api::V0::MarketVendorsController < ApplicationController
                     "detail": "Validation failed: Market must exist"
                 }
             ]
-        }
+        }, status: :not_found
     elsif exception.message.include?("Vendor")
       render json: {
         "errors": [
@@ -39,13 +75,13 @@ class Api::V0::MarketVendorsController < ApplicationController
                 "detail": "Validation failed: Vendor must exist"
             }
         ]
-    }
+    }, status: :not_found
     # elsif
     #   render json: ErrorSerializer.new(ErrorMessage.new(exception.message, 404))
     #     .serialize_json, status: :not_found
     end
   end
-
+end
 #   {
 #     "errors": [
 #         {

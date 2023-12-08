@@ -252,13 +252,14 @@ end
       market = Market.create(id: 1234, name: "Union Square Greenmarket", street: "Union Square West", city: "New York", county: "New York", state: "NY", zip: "10003", lat: "40.7359", lon: "-73.9911")
       get "/api/v0/markets/#{market.id}/nearest_atms"
       get "/api/v0/markets/#{market.id}/nearest_atms"
-      data = JSON.parse(response.body, symbolize_names: true)
+      data = JSON.parse(response.body, symbolize_names: true)[:data]
       expect(response).to have_http_status(200)
-      expect(data.first[:data][:attributes][:name]).to be_an(String)
-      expect(data.first[:data][:attributes][:address]).to be_an(String)
-      expect(data.first[:data][:attributes][:lat]).to be_an(Float)
-      expect(data.first[:data][:attributes][:lon]).to be_an(Float)
-      expect(data.first[:data][:attributes][:distance]).to be_an(Float)
+
+      expect(data.first[:attributes][:name]).to be_an(String)
+      expect(data.first[:attributes][:address]).to be_an(String)
+      expect(data.first[:attributes][:lat]).to be_an(Float)
+      expect(data.first[:attributes][:lon]).to be_an(Float)
+      expect(data.first[:attributes][:distance]).to be_an(Float)
       
     end
   

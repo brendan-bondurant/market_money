@@ -201,6 +201,24 @@ describe "Market Money API" do
     expect(markets.first[:attributes]).to have_key(:name)
     expect(markets.first[:attributes][:name]).to eq(name)
   end
+  it 'can search by city, state and name' do
+    headers = {"CONTENT_TYPE" => "application/json"}
+    market = create(:market)
+    state = market.state
+    city = market.city
+    name = market.name
+    get "/api/v0/markets/search", params: { state: state, name: name, city: city }, headers: headers
+    markets = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(response).to have_http_status(200)
+
+    expect(markets.first[:attributes]).to have_key(:state)
+    expect(markets.first[:attributes][:state]).to eq(state)
+    expect(markets.first[:attributes]).to have_key(:name)
+    expect(markets.first[:attributes][:name]).to eq(name)
+    expect(markets.first[:attributes]).to have_key(:city)
+    expect(markets.first[:attributes][:city]).to eq(city)
+  end
   it 'cannot search by city and name' do
     headers = {"CONTENT_TYPE" => "application/json"}
     market = create(:market)

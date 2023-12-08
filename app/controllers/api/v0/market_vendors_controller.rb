@@ -20,7 +20,6 @@ class Api::V0::MarketVendorsController < ApplicationController
 end
 
   def create
-
     market_id = params[:market_id]
     vendor_id = params[:vendor_id]
     market = Market.find(market_id)

@@ -139,5 +139,22 @@ describe "Market Money API" do
     expect(data[:errors].first[:status]).to eq("404")
     expect(data[:errors].first[:detail]).to eq("Couldn't find Market with 'id'=123412433124")
   end
+  describe '#search' do
+  
+  end 
+  it 'can search by state' do
+    headers = {"CONTENT_TYPE" => "application/json"}
+    market = create(:market)
+    state = market.state
+
+    get "/api/v0/markets/search", params: { state: state }, headers: headers
+    markets = JSON.parse(response.body, symbolize_names: true)[:data]
+
+    expect(response).to have_http_status(200)
+
+    expect(market[:attributes]).to have_key(:state)
+    expect(market[:attributes][:state]).to eq(state)
+  
+  end
 
 end

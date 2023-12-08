@@ -6,11 +6,17 @@ class Api::V0::MarketsController < ApplicationController
   end
 
   def show
-      market = Market.find(params[:id])
-      render json: MarketSerializer.new(market)
+    market = Market.find(params[:id])
+    render json: MarketSerializer.new(market)
+  end
+    
+  def search
+    if params[:state]
+    require 'pry'; binding.pry
     end
   end
-
+    
+  end
   private
 
   def not_found_response(exception)

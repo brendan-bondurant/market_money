@@ -262,7 +262,5 @@ end
       expect(data.first[:attributes][:distance]).to be_an(Float)
       
     end
-  
   end
-  
 end

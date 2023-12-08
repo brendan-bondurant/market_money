@@ -11,8 +11,34 @@ class Api::V0::MarketsController < ApplicationController
   end
     
   def search
-    if params[:state]
-    require 'pry'; binding.pry
+    if params[:state].present? && params[:city].present? && params[:name].present?
+      markets = Market.where(state: params[:state], city: params[:city], name: params[:name])
+      render json: MarketSerializer.new(markets)
+    elsif
+      params[:state].present? && params[:city].present?
+      markets = Market.where(state: params[:state], city: params[:city])
+      render json: MarketSerializer.new(markets)
+    elsif
+      params[:state].present? && params[:name].present?
+      markets = Market.where(state: params[:state], name: params[:name])
+      render json: MarketSerializer.new(markets)
+    elsif
+      params[:name].present? && params[:city].present? == false
+      markets = Market.where(name: params[:name])
+      render json: MarketSerializer.new(markets)
+    elsif
+      params[:state].present?
+      markets = Market.where(state: params[:state])
+      render json: MarketSerializer.new(markets)
+    else
+      render json: {
+            "errors": [
+                {
+                    "status": "422",
+                    "detail": "Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint."
+                }
+            ]
+        }, status: :unprocessable_entity
     end
   end
     

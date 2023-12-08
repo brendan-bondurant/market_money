@@ -17,9 +17,10 @@ class Api::V0::MarketVendorsController < ApplicationController
         ]
       }, status: :not_found
   end
+end
 
   def create
-    require 'pry'; binding.pry
+
     market_id = params[:market_id]
     vendor_id = params[:vendor_id]
     market = Market.find(market_id)
@@ -81,7 +82,7 @@ class Api::V0::MarketVendorsController < ApplicationController
     #     .serialize_json, status: :not_found
     end
   end
-end
+# end
 #   {
 #     "errors": [
 #         {

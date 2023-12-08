@@ -5,7 +5,7 @@ RSpec.describe "Market Vendor" do
     headers = {"CONTENT_TYPE" => "application/json"}  
     market = create(:market)
     vendor = create(:vendor)
-    post '/api/v0/market_vendors', params: { market_id: market.id, vendor_id: vendor.id }, headers: headers
+    post '/api/v0/market_vendors', params: { market_id: market.id, vendor_id: vendor.id }.to_json, headers: headers
     
     new_association = JSON.parse(response.body, symbolize_names: true)[:data]
     expect(response).to have_http_status(201)

@@ -30,7 +30,7 @@ class Api::V0::MarketsController < ApplicationController
       params[:state].present?
       markets = Market.where(state: params[:state])
       render json: MarketSerializer.new(markets)
-    else
+    elsif params[:city].present? || (params[:city].present? && params[:name].present?)
       render json: {
             "errors": [
                 {
@@ -39,6 +39,8 @@ class Api::V0::MarketsController < ApplicationController
                 }
             ]
         }, status: :unprocessable_entity
+    # else
+    #   render json: MarketSerializer.new(Market.all)
     end
   end
     

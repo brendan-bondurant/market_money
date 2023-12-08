@@ -17,8 +17,27 @@ class Api::V0::MarketsController < ApplicationController
     response = conn.get("/search/2/search/cash_dispenser.json")
     data = JSON.parse(response.body, symbolize_names: true)
     distance = data[:results].sort_by { |atm| atm[:dist] }
-    # require 'pry'; binding.pry
-  end
+
+    nearest_atms = distance.map do |atm|
+      {
+        id: nil,
+        type: 'atm',
+        attributes: {
+          name: atm[:poi][:name],
+          address: atm[:address][:streetNumber] + " " + atm[:address][:streetName],
+          lat: atm[:position][:lat],
+          lon: atm[:position][:lon],
+          distance: atm[:dist]
+        }
+      }
+    end
+    
+    render json: { data: nearest_atms }
+
+
+    rescue Faraday::ConnectionFailed
+      :not_found_response
+    end
 
   def show
     market = Market.find(params[:id])

@@ -233,12 +233,34 @@ describe "Market Money API" do
   end
 end
   describe '#atm' do
-    it 'can find close atm' do
-      market = create(:market)
+    it 'can not find close atm if market id does not exist' do
+      market = Market.new(id: 1234, name: "Union Square Greenmarket", street: "Union Square West", city: "New York", county: "New York", state: "NY", zip: "10003", lat: "40.7359", lon: "-73.9911")
       get "/api/v0/markets/#{market.id}/nearest_atms"
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(data[:errors]).to be_a(Array)
+      expect(data[:errors].first[:status]).to eq("404")
+      expect(data[:errors].first[:detail]).to eq("Couldn't find Market with 'id'=1234")
+    end
+    it 'can find close atm' do
+      market = Market.create(id: 1234, name: "Union Square Greenmarket", street: "Union Square West", city: "New York", county: "New York", state: "NY", zip: "10003", lat: "40.7359", lon: "-73.9911")
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+      data = JSON.parse(response.body, symbolize_names: true)
+      expect(response).to have_http_status(200)
+    end
+    it 'can find close atm' do
+      market = Market.create(id: 1234, name: "Union Square Greenmarket", street: "Union Square West", city: "New York", county: "New York", state: "NY", zip: "10003", lat: "40.7359", lon: "-73.9911")
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+      data = JSON.parse(response.body, symbolize_names: true)[:data]
+      expect(response).to have_http_status(200)
+
+      expect(data.first[:attributes][:name]).to be_an(String)
+      expect(data.first[:attributes][:address]).to be_an(String)
+      expect(data.first[:attributes][:lat]).to be_an(Float)
+      expect(data.first[:attributes][:lon]).to be_an(Float)
+      expect(data.first[:attributes][:distance]).to be_an(Float)
       
     end
-  
   end
-  
 end

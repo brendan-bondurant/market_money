@@ -22,14 +22,17 @@ end
   def create
     # market_id = params[:market_id]
     # vendor_id = params[:vendor_id]
+# require 'pry'; binding.pry
     market = Market.find(params[:market_id])
     vendor = Vendor.find(params[:vendor_id])
     new_mv = MarketVendor.new(market_vendor_params)
-    new_mv.save
-    render json: MarketVendorSerializer.new(new_mv), status: :created
-    # else
-    #   render json: ErrorSerializer.new(ErrorMessage.new(new_mv.errors.full_messages.join(", "), 422))
-    #     .serialize_json, status: :unprocessable_entity
+    # require 'pry'; binding.pry
+    if new_mv.save
+      render json: MarketVendorSerializer.new(new_mv), status: :created
+    else
+      render json: ErrorSerializer.new(ErrorMessage.new(new_mv.errors.full_messages.join(", "), 422))
+        .serialize_json, status: :unprocessable_entity
+    end
     rescue ActiveRecord::RecordNotFound => exception
       not_valid_response(exception)
     end

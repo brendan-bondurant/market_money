@@ -236,7 +236,7 @@ end
     it 'can find close atm' do
       market = create(:market)
       get "/api/v0/markets/#{market.id}/nearest_atms"
-    
+      
     end
   
   end

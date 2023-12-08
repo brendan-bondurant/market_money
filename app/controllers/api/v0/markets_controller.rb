@@ -5,6 +5,10 @@ class Api::V0::MarketsController < ApplicationController
     render json: MarketSerializer.new(Market.all)
   end
 
+  def nearest_atms
+    require 'pry'; binding.pry
+  end
+
   def show
     market = Market.find(params[:id])
     render json: MarketSerializer.new(market)
@@ -39,8 +43,8 @@ class Api::V0::MarketsController < ApplicationController
                 }
             ]
         }, status: :unprocessable_entity
-    # else
-    #   render json: MarketSerializer.new(Market.all)
+    else
+      render json: MarketSerializer.new(Market.all)
     end
   end
     

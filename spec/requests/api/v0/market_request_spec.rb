@@ -141,34 +141,33 @@ describe "Market Money API" do
   end
   describe '#search' do
   
-  end 
   it 'can search by state' do
     headers = {"CONTENT_TYPE" => "application/json"}
     market = create(:market)
     state = market.state
-
+    
     get "/api/v0/markets/search", params: { state: state }, headers: headers
     markets = JSON.parse(response.body, symbolize_names: true)[:data]
-
+    
     expect(response).to have_http_status(200)
-
+    
     expect(markets.first[:attributes]).to have_key(:state)
     expect(markets.first[:attributes][:state]).to eq(state)
-  
+    
   end
   it 'can search by name' do
     headers = {"CONTENT_TYPE" => "application/json"}
     market = create(:market)
     name = market.name
-
+    
     get "/api/v0/markets/search", params: { name: name }, headers: headers
     markets = JSON.parse(response.body, symbolize_names: true)[:data]
-
+    
     expect(response).to have_http_status(200)
-
+    
     expect(markets.first[:attributes]).to have_key(:name)
     expect(markets.first[:attributes][:name]).to eq(name)
-  
+    
   end
   it 'can search by state and city' do
     headers = {"CONTENT_TYPE" => "application/json"}
@@ -177,14 +176,14 @@ describe "Market Money API" do
     city = market.city
     get "/api/v0/markets/search", params: { state: state, city: city }, headers: headers
     markets = JSON.parse(response.body, symbolize_names: true)[:data]
-
+    
     expect(response).to have_http_status(200)
-
+    
     expect(markets.first[:attributes]).to have_key(:state)
     expect(markets.first[:attributes][:state]).to eq(state)
     expect(markets.first[:attributes]).to have_key(:city)
     expect(markets.first[:attributes][:city]).to eq(city)
-  
+    
   end
   it 'can search by state and name' do
     headers = {"CONTENT_TYPE" => "application/json"}
@@ -193,9 +192,9 @@ describe "Market Money API" do
     name = market.name
     get "/api/v0/markets/search", params: { state: state, name: name }, headers: headers
     markets = JSON.parse(response.body, symbolize_names: true)[:data]
-
+    
     expect(response).to have_http_status(200)
-
+    
     expect(markets.first[:attributes]).to have_key(:state)
     expect(markets.first[:attributes][:state]).to eq(state)
     expect(markets.first[:attributes]).to have_key(:name)
@@ -209,9 +208,9 @@ describe "Market Money API" do
     name = market.name
     get "/api/v0/markets/search", params: { state: state, name: name, city: city }, headers: headers
     markets = JSON.parse(response.body, symbolize_names: true)[:data]
-
+    
     expect(response).to have_http_status(200)
-
+    
     expect(markets.first[:attributes]).to have_key(:state)
     expect(markets.first[:attributes][:state]).to eq(state)
     expect(markets.first[:attributes]).to have_key(:name)
@@ -225,12 +224,21 @@ describe "Market Money API" do
     city = market.city
     name = market.name
     get "/api/v0/markets/search", params: { city: city, name: name }, headers: headers
-
+    
     data = JSON.parse(response.body, symbolize_names: true)
-
+    
     expect(data[:errors]).to be_a(Array)
     expect(data[:errors].first[:status]).to eq("422")
     expect(data[:errors].first[:detail]).to eq("Invalid set of parameters. Please provide a valid set of parameters to perform a search with this endpoint.")
   end
-
+end
+  describe '#atm' do
+    it 'can find close atm' do
+      market = create(:market)
+      get "/api/v0/markets/#{market.id}/nearest_atms"
+    
+    end
+  
+  end
+  
 end

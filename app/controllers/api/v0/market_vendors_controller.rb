@@ -20,10 +20,10 @@ class Api::V0::MarketVendorsController < ApplicationController
 end
 
   def create
-    market_id = params[:market_id]
-    vendor_id = params[:vendor_id]
-    market = Market.find(market_id)
-    vendor = Vendor.find(vendor_id)
+    # market_id = params[:market_id]
+    # vendor_id = params[:vendor_id]
+    market = Market.find(params[:market_id])
+    vendor = Vendor.find(params[:vendor_id])
     new_mv = MarketVendor.new(market_vendor_params)
     new_mv.save
     render json: MarketVendorSerializer.new(new_mv), status: :created
